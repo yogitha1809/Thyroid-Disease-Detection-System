@@ -98,9 +98,7 @@ print(classification_report(
     best_model.predict(X_test)
 ))
 
-# ==========================
 # ACCURACY GRAPH
-# ==========================
 
 plt.figure(figsize=(8, 5))
 
@@ -133,9 +131,7 @@ plt.close()
 
 print("Accuracy graph saved successfully!")
 
-# ==========================
 # SAVE BEST MODEL
-# ==========================
 
 joblib.dump(
     best_model,

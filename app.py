@@ -9,9 +9,9 @@ import os
 app = Flask(__name__)
 app.secret_key = "thyroid_secret_key_123"
 
-# ==========================================
+
 # LOAD MODEL
-# ==========================================
+
 model = joblib.load("model/thyroid_model.pkl")
 
 

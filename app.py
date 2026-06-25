@@ -9,15 +9,12 @@ import os
 app = Flask(__name__)
 app.secret_key = "thyroid_secret_key_123"
 
-
 # LOAD MODEL
 
 model = joblib.load("model/thyroid_model.pkl")
 
-
-# ==========================================
 # PDF TEXT EXTRACTION
-# ==========================================
+
 def extract_pdf_text(pdf_path):
     text = ""
 
@@ -30,10 +27,8 @@ def extract_pdf_text(pdf_path):
 
     return text
 
-
-# ==========================================
 # VALUE EXTRACTION
-# ==========================================
+
 def get_value(text, keywords):
 
     for keyword in keywords:
@@ -47,10 +42,8 @@ def get_value(text, keywords):
 
     return None
 
-
-# ==========================================
 # HOME PAGE
-# ==========================================
+
 @app.route('/')
 def home():
 
@@ -62,10 +55,8 @@ def home():
         user=session['user']
     )
 
-
-# ==========================================
 # LOGIN
-# ==========================================
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -98,10 +89,8 @@ def login():
 
     return render_template('login.html')
 
-
-# ==========================================
 # REGISTER
-# ==========================================
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
@@ -136,10 +125,8 @@ def register():
 
     return render_template('register.html')
 
-
-# ==========================================
 # LOGOUT
-# ==========================================
+
 @app.route('/logout')
 def logout():
 
@@ -147,10 +134,8 @@ def logout():
 
     return redirect(url_for('login'))
 
-
-# ==========================================
 # PREDICTION PAGE
-# ==========================================
+
 @app.route('/prediction')
 def prediction():
 
@@ -162,10 +147,8 @@ def prediction():
         user=session['user']
     )
 
-
-# ==========================================
 # MANUAL PREDICTION
-# ==========================================
+
 @app.route('/predict', methods=['POST'])
 def predict():
 
@@ -244,9 +227,8 @@ def predict():
             user=session['user']
         )
 
-# ==========================================
 # PDF PREDICTION
-# ==========================================
+
 @app.route('/upload_pdf', methods=['POST'])
 def upload_pdf():
 
@@ -344,9 +326,8 @@ def upload_pdf():
             user=session['user']
         )
 
-# ==========================================
 # HISTORY PAGE
-# ==========================================
+
 @app.route('/history')
 def history():
 
@@ -370,10 +351,8 @@ def history():
         user=session['user']
     )
 
-
-# ==========================================
 # RUN APP
-# ==========================================
+
 if __name__ == "__main__":
     app.run(
         debug=True,

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thyroid Disease Detection System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h2>Thyroid Disease Detection System</h2>
+
+        <div>
+            <span>Welcome, {{ user }}</span>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+
+        <h1>AI Powered Thyroid Disease Detection</h1>
+
+        <p>
+            This system uses Machine Learning techniques to analyze
+            thyroid-related laboratory test values and predict
+            possible thyroid disorders quickly and accurately.
+        </p>
+
+        <a href="/prediction" class="predict-btn">
+            Start Prediction
+        </a>
+
+        <a href="/history" class="history-btn">
+            View History
+        </a>
+
+    </section>
+
+    <!-- About Thyroid -->
+    <section class="about">
+
+        <h2>About Thyroid Disease</h2>
+
+        <p>
+            The thyroid gland is a butterfly-shaped gland located in
+            the front of the neck. It produces hormones that regulate
+            metabolism, body temperature, heart rate, growth, and energy
+            production. When the thyroid gland produces too much or too
+            little hormone, various thyroid disorders can occur.
+        </p>
+
+        <h3>Common Symptoms</h3>
+
+        <ul>
+            <li>Fatigue and weakness</li>
+            <li>Weight gain or weight loss</li>
+            <li>Hair loss</li>
+            <li>Dry skin</li>
+            <li>Mood changes</li>
+            <li>Difficulty concentrating</li>
+            <li>Irregular heartbeat</li>
+            <li>Sensitivity to cold or heat</li>
+        </ul>
+
+    </section>
+
+    <!-- Types of Disorders -->
+    <section class="about">
+
+        <h2>Types of Thyroid Disorders</h2>
+
+        <div class="card-container">
+
+            <div class="info-card">
+                <h3>Hypothyroidism</h3>
+
+                <p>
+                    A condition where the thyroid gland does not produce
+                    enough hormones. Symptoms include fatigue, weight gain,
+                    depression, dry skin, and cold intolerance.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>Hyperthyroidism</h3>
+
+                <p>
+                    A condition where the thyroid gland produces excessive
+                    hormones. Symptoms include weight loss, anxiety,
+                    sweating, and rapid heartbeat.
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>Goiter</h3>
+
+                <p>
+                    Enlargement of the thyroid gland causing swelling
+                    in the neck. It may occur due to iodine deficiency
+                    or thyroid dysfunction.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Importance -->
+    <section class="about">
+
+        <h2>Why Early Detection Matters?</h2>
+
+        <p>
+            Early detection of thyroid disease helps prevent severe
+            complications such as cardiovascular disease, infertility,
+            osteoporosis, obesity, depression, and metabolic disorders.
+            Timely diagnosis enables effective treatment and improved
+            quality of life.
+        </p>
+
+    </section>
+
+    
+
+    <!-- Reference Values -->
+    <section class="about">
+
+        <h2>Reference Values</h2>
+
+        <table>
+
+            <tr>
+                <th>Parameter</th>
+                <th>Normal Range</th>
+            </tr>
+
+            <tr>
+                <td>TSH</td>
+                <td>0.4 – 4.0 mIU/L</td>
+            </tr>
+
+            <tr>
+                <td>T3</td>
+                <td>0.8 – 2.0 ng/dL</td>
+            </tr>
+
+            <tr>
+                <td>TT4</td>
+                <td>5 – 12 µg/dL</td>
+            </tr>
+
+        </table>
+
+    </section>
+
+    <!-- Prevention -->
+    <section class="about">
+
+        <h2>Tips for Maintaining Thyroid Health</h2>
+
+        <ul>
+            <li>Eat a balanced diet rich in iodine.</li>
+            <li>Exercise regularly.</li>
+            <li>Maintain a healthy body weight.</li>
+            <li>Reduce stress through relaxation techniques.</li>
+            <li>Attend regular health checkups.</li>
+            <li>Take medications as prescribed by doctors.</li>
+            <li>Avoid smoking and unhealthy lifestyle habits.</li>
+        </ul>
+
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <p>
+            © 2026 Thyroid Disease Detection System |
+            AI-Based Healthcare Prediction Platform
+        </p>
+
+    </footer>
+
+</body>
+</html>

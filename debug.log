@@ -1,0 +1,32 @@
+=== FORM SUBMITTED ===
+Form Data: {'age': '21', 'sex': '0', 'TSH': '1.6', 'T3': '-1', 'TT4': '-1', 'T4U': '1.9', 'FTI': '100'}
+Values: age=21.0, sex=0, tsh=1.6, t3=-1.0, tt4=-1.0, t4u=1.9, fti=100.0
+Features: [[ 21.    0.    1.6  -1.   -1.    1.9 100. ]]
+Prediction: [1]
+Probability: [[0.45 0.55]]
+Saved to DB: Thyroid Disease, 55.0%
+Result: ⚠️ Thyroid Disease Detected, Confidence=55.0
+=== FORM SUBMITTED ===
+Form Data: {'age': '21', 'sex': '0', 'TSH': '21', 'T3': '-3', 'TT4': '4', 'T4U': '100', 'FTI': '-0.2'}
+Values: age=21.0, sex=0, tsh=21.0, t3=-3.0, tt4=4.0, t4u=100.0, fti=-0.2
+Features: [[ 21.    0.   21.   -3.    4.  100.   -0.2]]
+Prediction: [1]
+Probability: [[0.07 0.93]]
+Saved to DB: Thyroid Disease, 93.0%
+Result: ⚠️ Thyroid Disease Detected, Confidence=93.0
+=== FORM SUBMITTED ===
+Form Data: {'age': '21', 'sex': '0', 'TSH': '2', 'T3': '1.9', 'TT4': '100', 'T4U': '8', 'FTI': '1'}
+Values: age=21.0, sex=0, tsh=2.0, t3=1.9, tt4=100.0, t4u=8.0, fti=1.0
+Features: [[ 21.    0.    2.    1.9 100.    8.    1. ]]
+Prediction: [1]
+Probability: [[0.16 0.84]]
+Saved to DB: Thyroid Disease, 84.0%
+Result: ⚠️ Thyroid Disease Detected, Confidence=84.0
+=== FORM SUBMITTED ===
+Form Data: {'age': '12', 'sex': '0', 'TSH': '1', 'T3': '2', 'TT4': '56', 'T4U': '48', 'FTI': '100'}
+Values: age=12.0, sex=0, tsh=1.0, t3=2.0, tt4=56.0, t4u=48.0, fti=100.0
+Features: [[ 12.   0.   1.   2.  56.  48. 100.]]
+Prediction: [0]
+Probability: [[0.51 0.49]]
+Saved to DB: Normal, 51.0%
+Result: ✅ Normal, Confidence=51.0

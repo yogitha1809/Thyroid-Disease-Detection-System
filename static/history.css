@@ -1,0 +1,158 @@
+/* =========================
+   GENERAL
+========================= */
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+
+    background:linear-gradient(
+        135deg,
+        #e0f2fe 0%,
+        #f0f9ff 50%,
+        #dbeafe 100%
+    );
+
+    min-height:100vh;
+    padding:30px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    width:95%;
+    max-width:1400px;
+    margin:auto;
+    overflow-x:auto;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+h1{
+    text-align:center;
+    color:#0f172a;
+    margin-bottom:25px;
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-btn{
+    display:inline-block;
+    padding:12px 20px;
+    background:#2563eb;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+    font-weight:bold;
+    transition:0.3s;
+    margin-bottom:20px;
+}
+
+.back-btn:hover{
+    background:#1d4ed8;
+}
+
+/* =========================
+   TABLE CONTAINER
+========================= */
+
+.table-card{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* =========================
+   TABLE
+========================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    overflow:hidden;
+    border-radius:10px;
+}
+
+/* TABLE HEADER */
+
+th{
+    background:#2563eb;
+    color:white;
+    padding:14px;
+    font-size:15px;
+}
+
+/* TABLE DATA */
+
+td{
+    padding:12px;
+    text-align:center;
+    border:1px solid #e5e7eb;
+}
+
+/* ALTERNATE ROWS */
+
+tr:nth-child(even){
+    background:#f8fafc;
+}
+
+/* HOVER EFFECT */
+
+tr:hover{
+    background:#dbeafe;
+}
+
+/* =========================
+   RESULT BADGES
+========================= */
+
+.normal{
+    color:#166534;
+    background:#dcfce7;
+    padding:6px 12px;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+.thyroid{
+    color:#991b1b;
+    background:#fee2e2;
+    padding:6px 12px;
+    border-radius:20px;
+    font-weight:bold;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:768px){
+
+    body{
+        padding:15px;
+    }
+
+    h1{
+        font-size:24px;
+    }
+
+    th,
+    td{
+        padding:10px;
+        font-size:13px;
+    }
+
+    .back-btn{
+        width:100%;
+        text-align:center;
+        box-sizing:border-box;
+    }
+}

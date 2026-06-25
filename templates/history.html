@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Prediction History</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='history.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Thyroid Prediction History</h1>
+
+    <a href="/" class="back-btn">⬅ Back to Home</a>
+
+    <div class="table-wrapper">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>TSH</th>
+                    <th>T3</th>
+                    <th>TT4</th>
+                    <th>Prediction</th>
+                    <th>Confidence</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% if records|length == 0 %}
+                    <tr>
+                        <td colspan="9">No history available</td>
+                    </tr>
+                {% endif %}
+
+                {% for row in records %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                    <td>{{ row[6] }}</td>
+                    <td>{{ row[7] }}</td>
+                    <td>{{ row[8] }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        
+
+    </div>
+
+</div>
+
+</body>
+</html>

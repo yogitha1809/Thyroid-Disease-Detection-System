@@ -1,188 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Prediction Result</title>
-
-    <link rel="stylesheet"
-    href="{{ url_for('static', filename='result.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='result.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 </head>
-
 <body>
 
 <div class="navbar">
-
     <h2>Prediction Result</h2>
-
     <div>
-
         <a href="/">Home</a>
-
-        <a href="/prediction">Prediction</a>
-
+        <a href="/prediction">Predict Again</a>
         <a href="/history">History</a>
-
-        <a href="/logout" class="logout">
-            Logout
-        </a>
-
+        <a href="/logout" class="logout">Logout</a>
     </div>
-
 </div>
 
 <div class="container">
-
     {% if prediction_text == "Normal" %}
-
     <div class="result-card normal">
-
         <h1>🟢 Normal Thyroid Function</h1>
-
         <h3>Confidence Score: {{ confidence }}%</h3>
-
     </div>
-
     {% else %}
-
     <div class="result-card disease">
-
         <h1>🔴 Thyroid Disease Detected</h1>
-
         <h3>Confidence Score: {{ confidence }}%</h3>
-
     </div>
-
     {% endif %}
 
     <div class="progress-container">
-
-        <div class="progress-bar"
-             style="width: {{ confidence }}%;">
-        </div>
-
+        <div class="progress-bar" style="width: {{ confidence }}%;"></div>
     </div>
 
     <div class="card">
-
         <h2>Patient Thyroid Values</h2>
-
         <table>
-
-            <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-                <th>Normal Range</th>
-            </tr>
-
-            <tr>
-                <td>TSH</td>
-                <td>{{ tsh }}</td>
-                <td>0.4 - 4.0</td>
-            </tr>
-
-            <tr>
-                <td>T3</td>
-                <td>{{ t3 }}</td>
-                <td>0.8 - 2.0</td>
-            </tr>
-
-            <tr>
-                <td>TT4</td>
-                <td>{{ tt4 }}</td>
-                <td>5 - 12</td>
-            </tr>
-
+            <tr><th>Parameter</th><th>Value</th><th>Normal Range</th></tr>
+            <tr><td>TSH</td><td>{{ tsh }}</td><td>0.4 - 4.0</td></tr>
+            <tr><td>T3</td><td>{{ t3 }}</td><td>0.8 - 2.0</td></tr>
+            <tr><td>TT4</td><td>{{ tt4 }}</td><td>5 - 12</td></tr>
         </table>
-
     </div>
 
     <div class="card">
-
         <h2>Thyroid Parameter Analysis</h2>
-
         <canvas id="thyroidChart"></canvas>
-
     </div>
 
     <div class="card">
-
         <h2>Model Accuracy Comparison</h2>
-
-        <img
-            src="{{ url_for('static', filename='accuracy_graph.png') }}"
-            alt="Accuracy Graph"
-            class="graph-img">
-
+        <canvas id="accuracyChart"></canvas>
     </div>
-
 </div>
 
 <script>
-
-const ctx = document.getElementById('thyroidChart');
-
+// 1. Thyroid Parameter Bar Chart
+const ctx = document.getElementById('thyroidChart').getContext('2d');
 new Chart(ctx, {
-
     type: 'bar',
-
     data: {
-
-        labels: [
-            'TSH',
-            'T3',
-            'TT4'
-        ],
-
+        labels: ['TSH', 'T3', 'TT4'],
         datasets: [{
-
             label: 'Patient Values',
-
-            data: [
-                {{ tsh }},
-                {{ t3 }},
-                {{ tt4 }}
-            ],
-
-            backgroundColor: [
-                '#2563eb',
-                '#16a34a',
-                '#dc2626'
-            ]
-
+            data: [{{ tsh }}, {{ t3 }}, {{ tt4 }}],
+            backgroundColor: ['#2563eb', '#16a34a', '#dc2626']
         }]
-    },
-
-    options: {
-
-        responsive: true,
-
-        plugins: {
-
-            legend: {
-                display: true
-            }
-
-        },
-
-        scales: {
-
-            y: {
-                beginAtZero: true
-            }
-
-        }
-
     }
-
 });
 
-</script>
+// 2. Model Accuracy Comparison (Pie Chart with Percentages)
+Chart.register(ChartDataLabels);
 
+const accuracyCtx = document.getElementById("accuracyChart").getContext("2d");
+new Chart(accuracyCtx, {
+    type: "pie", 
+    data: {
+        labels: [
+            "Random Forest",
+            "SVM",
+            "KNN"
+        ],
+        datasets: [{
+            label: "Accuracy (%)",
+            data: [
+                96.45, // Random Forest Accuracy
+                88.20, // SVM Accuracy
+                91.15  // KNN Accuracy
+            ],
+            backgroundColor: [
+                "#2563eb", // Blue
+                "#16a34a", // Green
+                "#dc2626"  // Red
+            ],
+            borderColor: '#ffffff',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom'
+            },
+            datalabels: {
+                color: '#ffffff',
+                font: {
+                    weight: 'bold',
+                    size: 14
+                },
+                formatter: function(value, context) {
+                    return value + '%';
+                }
+            }
+        }
+    }
+});
+</script>
 </body>
 </html>

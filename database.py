@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-print("🔥 Creating database...")
+print("Creating database...")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, "thyroid.db")
@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS predictions (
 conn.commit()
 conn.close()
 
-print("✅ Database ready at:", db_path)
+print("Database ready at:", db_path)

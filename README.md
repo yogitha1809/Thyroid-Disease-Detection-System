@@ -1,37 +1,45 @@
 # Thyroid Disease Detection System
 
-## Project Overview
+##  Project Overview
 
-The Thyroid Disease Detection System is a Machine Learning based web application developed using Python, Flask, and Scikit-learn. The system predicts whether a patient has thyroid disease based on medical test parameters such as TSH, T3, TT4, T4U, and FTI.
+The **Thyroid Disease Detection System** is a Machine Learning web application built using **Python, Flask, and Scikit-learn**.  
+It predicts whether a patient has thyroid disorder using medical parameters such as:
 
-The system also supports PDF lab report analysis using PDFPlumber, allowing users to upload medical reports for automatic prediction.
+- TSH  
+- T3  
+- TT4  
+- Age  
+- Gender  
 
----
-
-## Objectives
-
-- Develop a machine learning model for thyroid disease prediction
-- Analyze thyroid medical datasets
-- Extract data from PDF lab reports using PDFPlumber
-- Provide a web-based prediction system
-- Enable early detection of thyroid disorders
+The system also supports **PDF lab report analysis**, where medical values are automatically extracted using **PDFPlumber** and used for prediction.
 
 ---
 
-## Technologies Used
+##  Objectives
 
-- Python
-- Flask
-- Pandas
-- NumPy
-- Scikit-learn
-- Joblib
-- Matplotlib
-- PDFPlumber
-- HTML
-- CSS
-- JavaScript
-- VS Code
+- Build a machine learning model for thyroid disease prediction  
+- Perform medical dataset preprocessing and analysis  
+- Extract medical values from PDF lab reports  
+- Provide a web-based prediction system using Flask  
+- Enable early detection of thyroid disorders  
+- Store and track prediction history  
+
+---
+
+##  Technologies Used
+
+- Python  
+- Flask  
+- Scikit-learn  
+- Pandas  
+- NumPy  
+- Joblib  
+- PDFPlumber  
+- Regex (re module)  
+- HTML, CSS, JavaScript  
+- Chart.js  
+- SQLite  
+- VS Code  
 
 ---
 
@@ -42,76 +50,73 @@ pip install pandas
 pip install numpy  
 pip install scikit-learn  
 pip install joblib  
-pip install matplotlib  
 pip install pdfplumber  
 
-OR
+OR  
 
-pip install -r requirements.txt
+pip install -r requirements.txt  
 
 ---
 
-## Dataset Information
+##  Dataset Information
 
-Dataset Size: 9172 Records
+- Dataset Size: 9172 Records  
 
 Features:
-- Age
-- Gender
-- TSH
-- T3
-- TT4
-- T4U
-- FTI
+- Age  
+- Gender  
+- TSH  
+- T3  
+- TT4  
 
 Target:
-- Normal
-- Thyroid Disease
+- Normal (0)  
+- Thyroid Disease (1)  
 
 ---
 
-## Machine Learning Model
+##  Machine Learning Model
 
-Algorithm Used:
-Random Forest Classifier
+- Algorithm: Random Forest Classifier  
+- Other Models Tested: SVM, KNN  
+- Final Model Selected: Random Forest  
 
-Accuracy:
-93.51%
+Accuracy: ~93.5%
 
 ---
 
-## Project Structure
+##  Project Structure
 
-THYROID DETECTION/
+THYROID DETECTION SYSTEM/
 
 dataset/
-- thyroid.csv
-- dataset_summary.txt
+  └── thyroid.csv
 
 model/
-- thyroid_model.pkl
+  └── thyroid_model.pkl
 
 static/
-- home.css
-- login.css
-- register.css
-- prediction.css
-- result.css
-- accuracy_graph.png
+  ├── home.css
+  ├── login.css
+  ├── register.css
+  ├── prediction.css
+  ├── result.css
 
 templates/
-- home.html
-- login.html
-- register.html
-- prediction.html
-- result.html
-- history.html
+  ├── home.html
+  ├── login.html
+  ├── register.html
+  ├── prediction.html
+  ├── result.html
+  ├── history.html
 
-app.py  
-train_model.py  
-check_dataset.py  
-requirements.txt  
-README.md  
+uploads/
+  └── (PDF files)
+
+app.py
+train_model.py
+requirements.txt
+README.md
 
 ---
 
@@ -129,65 +134,51 @@ pip install -r requirements.txt
 4. Train model  
 python train_model.py  
 
-5. Run application  
+5. Run app  
 python app.py  
 
 6. Open browser  
-http://127.0.0.1:5000  
+http://127.0.0.1:5001  
 
 ---
 
-## Working Flow
+##  Working Flow
 
 User Input / PDF Upload  
-→ Flask Web Application  
-→ PDFPlumber (if PDF uploaded)  
-→ Random Forest Model  
-→ Prediction Output  
-→ Result Display  
-
----
-
-## System Architecture
-
-User Input  
 → Flask Application  
+→ PDFPlumber (if PDF uploaded)  
 → Data Processing  
 → Machine Learning Model  
-→ Prediction Result  
-→ Web Output  
-
----
-
-## Results
-
-The Random Forest Classifier achieved 93.51% accuracy and successfully predicts thyroid disease from medical data.
+→ Prediction Output  
+→ Display Result  
+→ Save to SQLite History  
 
 ---
 
 ## Features
 
-- User Login and Registration
-- Thyroid Disease Prediction
-- PDF Report Upload and Extraction
-- Confidence Score Display
-- Patient History Tracking
-- Graph Visualization
-- Model Accuracy Comparison Graph
+- User Login & Registration  
+- Thyroid Disease Prediction  
+- PDF Report Upload & Extraction  
+- Confidence Score Display  
+- Patient History Tracking  
+- Graph Visualization  
+- Model Accuracy Comparison  
 
 ---
 
 ## Future Improvements
 
-- Deep Learning integration
-- Multi-class classification
-- Cloud deployment
-- Doctor recommendation system
-- Email report generation
+- Deep Learning model integration  
+- Multi-class classification (Hypo / Hyper / Normal)  
+- Cloud deployment  
+- Doctor recommendation system  
+- Email report generation  
+- Better PDF NLP extraction  
 
 ---
 
 ## Author
 
-Yogitha Lakshmi S
+Yogitha Lakshmi S  
 Mini Project – Thyroid Disease Detection System

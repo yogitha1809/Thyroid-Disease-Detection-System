@@ -1,6 +1,5 @@
 import pandas as pd
 import joblib
-import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
@@ -12,11 +11,18 @@ from sklearn.neighbors import KNeighborsClassifier
 df = pd.read_csv("dataset/thyroid.csv")
 
 print("Dataset Shape:", df.shape)
+# Check class distribution
+print("Target class distribution:")
+print(df['target'].value_counts())
+
+# Features & target
+X = df[['age', 'sex', 'TSH', 'T3', 'TT4']]
+y = df['target']
 
 # Keep ONLY required columns
 df = df[['age', 'sex', 'TSH', 'T3', 'TT4', 'target']]
 
-# Missing values
+# Missing values handling
 df['sex'] = df['sex'].fillna(df['sex'].mode()[0])
 df['TSH'] = df['TSH'].fillna(df['TSH'].median())
 df['T3'] = df['T3'].fillna(df['T3'].median())
@@ -32,14 +38,14 @@ df['target'] = df['target'].apply(
 
 df = df.dropna()
 
-# Features
+
+# Features & target
 X = df[['age', 'sex', 'TSH', 'T3', 'TT4']]
 y = df['target']
 
 # Split
 X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
+    X, y,
     test_size=0.2,
     random_state=42
 )
@@ -65,22 +71,14 @@ best_model = None
 best_acc = 0
 best_name = ""
 
-# For graph
-model_names = []
-accuracies = []
-
 print("\n===== MODEL COMPARISON =====")
 
+# Train & evaluate
 for name, model in models.items():
-
     model.fit(X_train, y_train)
-
     pred = model.predict(X_test)
 
     acc = accuracy_score(y_test, pred)
-
-    model_names.append(name)
-    accuracies.append(round(acc * 100, 2))
 
     print(f"{name}: {acc * 100:.2f}%")
 
@@ -98,44 +96,7 @@ print(classification_report(
     best_model.predict(X_test)
 ))
 
-# ACCURACY GRAPH
-
-plt.figure(figsize=(8, 5))
-
-bars = plt.bar(
-    model_names,
-    accuracies
-)
-
-plt.title("Model Accuracy Comparison")
-plt.xlabel("Algorithms")
-plt.ylabel("Accuracy (%)")
-plt.ylim(0, 100)
-
-for bar in bars:
-    height = bar.get_height()
-
-    plt.text(
-        bar.get_x() + bar.get_width()/2,
-        height + 1,
-        f"{height:.2f}%",
-        ha='center'
-    )
-
-plt.tight_layout()
-
-# Save graph in static folder
-plt.savefig("static/accuracy_graph.png")
-
-plt.close()
-
-print("Accuracy graph saved successfully!")
-
 # SAVE BEST MODEL
-
-joblib.dump(
-    best_model,
-    "model/thyroid_model.pkl"
-)
+joblib.dump(best_model, "model/thyroid_model.pkl")
 
 print("\nModel saved successfully!")

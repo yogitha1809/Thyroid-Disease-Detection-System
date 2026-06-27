@@ -5,61 +5,88 @@ import sqlite3
 import pdfplumber
 import re
 import os
+from functools import wraps
+from datetime import datetime
 
 app = Flask(__name__)
+
+
 app.secret_key = "thyroid_secret_key_123"
 
-# LOAD MODEL
+# OPTIONAL: better session handling
+app.config['SESSION_PERMANENT'] = False
 
+# LOAD MODEL
 model = joblib.load("model/thyroid_model.pkl")
+
+# LOGIN REQUIRED DECORATOR
+
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return wrap
 
 # PDF TEXT EXTRACTION
 
 def extract_pdf_text(pdf_path):
     text = ""
-
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
             page_text = page.extract_text()
-
             if page_text:
                 text += page_text + "\n"
-
     return text
 
 # VALUE EXTRACTION
 
 def get_value(text, keywords):
-
     for keyword in keywords:
-
         pattern = rf"{keyword}[\s\S]{{0,200}}?(\d+\.?\d*)"
-
         match = re.search(pattern, text, re.IGNORECASE)
-
         if match:
             return float(match.group(1))
+    return None
+def get_age(text):
+    match = re.search(r"\bAge\s*[:\-]?\s*(\d{2})\b", text, re.IGNORECASE)
+    if match:
+        return int(match.group(1))
+
+    # fallback: pick reasonable age range (10–100)
+    match = re.search(r"\b(\d{2})\s*(years|yrs|y)?\b", text, re.IGNORECASE)
+    if match:
+        age = int(match.group(1))
+        if 10 <= age <= 100:
+            return age
 
     return None
 
-# HOME PAGE
+def get_gender(text):
+    match = re.search(r"(Male|Female|M|F)", text, re.IGNORECASE)
+    if match:
+        gender = match.group(1).upper()
+
+        if gender == "MALE" or gender == "M":
+            return 1, "Male"
+
+        elif gender == "FEMALE" or gender == "F":
+            return 0, "Female"
+
+    return None, None
+
+# HOME
 
 @app.route('/')
+@login_required
 def home():
-
-    if 'user' not in session:
-        return redirect(url_for('login'))
-
-    return render_template(
-        'home.html',
-        user=session['user']
-    )
+    return render_template('home.html', user=session['user'])
 
 # LOGIN
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
     if request.method == 'POST':
 
         username = request.form['username']
@@ -74,18 +101,14 @@ def login():
         )
 
         user = cursor.fetchone()
-
         conn.close()
 
         if user:
+            session.clear() 
             session['user'] = username
             return redirect(url_for('home'))
 
-        else:
-            return render_template(
-                'login.html',
-                error="Invalid Username or Password"
-            )
+        return render_template('login.html', error="Invalid Username or Password")
 
     return render_template('login.html')
 
@@ -93,7 +116,6 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-
     if request.method == 'POST':
 
         username = request.form['username']
@@ -103,22 +125,15 @@ def register():
         cursor = conn.cursor()
 
         try:
-
             cursor.execute(
                 "INSERT INTO users(username,password) VALUES(?,?)",
                 (username, password)
             )
-
             conn.commit()
-
             return redirect(url_for('login'))
 
         except:
-
-            return render_template(
-                'register.html',
-                error="Username already exists"
-            )
+            return render_template('register.html', error="Username already exists")
 
         finally:
             conn.close()
@@ -129,34 +144,23 @@ def register():
 
 @app.route('/logout')
 def logout():
-
-    session.pop('user', None)
-
+    session.clear()
     return redirect(url_for('login'))
 
 # PREDICTION PAGE
 
 @app.route('/prediction')
+@login_required
 def prediction():
-
-    if 'user' not in session:
-        return redirect(url_for('login'))
-
-    return render_template(
-        'prediction.html',
-        user=session['user']
-    )
+    return render_template('prediction.html', user=session['user'])
 
 # MANUAL PREDICTION
 
 @app.route('/predict', methods=['POST'])
+@login_required
 def predict():
 
-    if 'user' not in session:
-        return redirect(url_for('login'))
-
     try:
-
         age = float(request.form['age'])
 
         sex_input = request.form['sex'].lower()
@@ -171,36 +175,47 @@ def predict():
 
         prediction = model.predict(features)
         prob = model.predict_proba(features)
-
+        print("Features:", features)
+        print("Prediction:", prediction)
+        print("Probability:", prob)
         confidence = round(max(prob[0]) * 100, 2)
+        prediction_time = datetime.now().strftime("%d-%m-%Y %H:%M")
 
-        result = (
-            "Normal"
-            if prediction[0] == 0
-            else "Thyroid Disease Detected"
-        )
+        # Predict disease type
+        if prediction[0] == 0:
+            result = "Normal"
+
+        else:
+            # Hyperthyroidism
+            if tsh < 0.4:
+                result = "Hyperthyroidism"
+
+            # Hypothyroidism
+            elif tsh > 4.0:
+                result = "Hypothyroidism"
+
+            # Other thyroid disorder
+            else:
+                result = "Thyroid Disorder"
 
         conn = sqlite3.connect("thyroid.db")
         cursor = conn.cursor()
 
         cursor.execute("""
-        INSERT INTO predictions
-        (
-            age, gender, tsh, t3, tt4,
-            prediction, confidence, source
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            age,
-            gender,
-            tsh,
-            t3,
-            tt4,
-            result,
-            confidence,
-            "Manual"
-        ))
+            INSERT INTO predictions
+            (age, gender, tsh, t3, tt4, prediction, confidence, source, prediction_time)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                age,
+                gender,
+                tsh,
+                t3,
+                tt4,
+                result,
+                confidence,
+                "Manual",
+                prediction_time
+            ))
 
         conn.commit()
         conn.close()
@@ -219,24 +234,27 @@ def predict():
         )
 
     except Exception as e:
+        print("ERROR in predict():", e)
 
         return render_template(
             "result.html",
             prediction_text=f"Error: {str(e)}",
             confidence=0,
+            age="",
+            gender="",
+            tsh=0,
+            t3=0,
+            tt4=0,
+            source="Manual Entry",
             user=session['user']
         )
-
 # PDF PREDICTION
 
 @app.route('/upload_pdf', methods=['POST'])
+@login_required
 def upload_pdf():
 
-    if 'user' not in session:
-        return redirect(url_for('login'))
-
     try:
-
         file = request.files['pdf_file']
 
         if file.filename == "":
@@ -244,11 +262,7 @@ def upload_pdf():
 
         os.makedirs("uploads", exist_ok=True)
 
-        filepath = os.path.join(
-            "uploads",
-            file.filename
-        )
-
+        filepath = os.path.join("uploads", file.filename)
         file.save(filepath)
 
         text = extract_pdf_text(filepath)
@@ -262,45 +276,62 @@ def upload_pdf():
         t3 = t3 if t3 is not None else 2.0
         tt4 = tt4 if tt4 is not None else 1.2
 
-        age = 30
-        sex = 1
-        gender = "Male"
+        age = get_age(text)
+
+        if age is None:
+            age = 30
+
+        sex, gender = get_gender(text)
+
+        if sex is None:
+            sex = 1
+            gender = "Male"
 
         features = np.array([[age, sex, tsh, t3, tt4]])
 
         prediction = model.predict(features)
         prob = model.predict_proba(features)
+        print("Features:", features)
+        print("Prediction:", prediction)
+        print("Probability:", prob)
 
         confidence = round(max(prob[0]) * 100, 2)
+        prediction_time = datetime.now().strftime("%d-%m-%Y %H:%M")
 
-        result = (
-            "Normal"
-            if prediction[0] == 0
-            else "Thyroid Disease Detected"
-        )
+        # Predict disease type
+        if prediction[0] == 0:
+            result = "Normal"
 
+        else:
+            # Hyperthyroidism
+            if tsh < 0.4:
+                result = "Hyperthyroidism"
+
+            # Hypothyroidism
+            elif tsh > 4.0:
+                result = "Hypothyroidism"
+
+            # Other thyroid disorder
+            else:
+                result = "Thyroid Disorder"
         conn = sqlite3.connect("thyroid.db")
         cursor = conn.cursor()
 
         cursor.execute("""
-        INSERT INTO predictions
-        (
-            age, gender, tsh, t3, tt4,
-            prediction, confidence, source
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            age,
-            gender,
-            tsh,
-            t3,
-            tt4,
-            result,
-            confidence,
-            "PDF"
-        ))
-
+            INSERT INTO predictions
+            (age, gender, tsh, t3, tt4, prediction, confidence, source, prediction_time)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                age,
+                gender,
+                tsh,
+                t3,
+                tt4,
+                result,
+                confidence,
+                "PDF",
+                prediction_time
+            ))
         conn.commit()
         conn.close()
 
@@ -318,43 +349,37 @@ def upload_pdf():
         )
 
     except Exception as e:
+        print("ERROR in upload_pdf():", e)
 
         return render_template(
             "result.html",
             prediction_text=f"Error: {str(e)}",
             confidence=0,
+            age="",
+            gender="",
+            tsh=0,
+            t3=0,
+            tt4=0,
+            source="PDF Report",
             user=session['user']
         )
 
-# HISTORY PAGE
+# HISTORY
 
 @app.route('/history')
+@login_required
 def history():
-
-    if 'user' not in session:
-        return redirect(url_for('login'))
 
     conn = sqlite3.connect("thyroid.db")
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT * FROM predictions ORDER BY id DESC"
-    )
-
+    cursor.execute("SELECT * FROM predictions ORDER BY id DESC")
     records = cursor.fetchall()
-
     conn.close()
 
-    return render_template(
-        'history.html',
-        records=records,
-        user=session['user']
-    )
+    return render_template('history.html', records=records, user=session['user'])
 
 # RUN APP
 
 if __name__ == "__main__":
-    app.run(
-        debug=True,
-        port=5001
-    )
+    app.run(debug=True, port=5001)

@@ -22,20 +22,62 @@
 
 <div class="container">
     {% if prediction_text == "Normal" %}
-    <div class="result-card normal">
-        <h1>🟢 Normal Thyroid Function</h1>
-        <h3>Confidence Score: {{ confidence }}%</h3>
-    </div>
-    {% else %}
-    <div class="result-card disease">
-        <h1>🔴 Thyroid Disease Detected</h1>
-        <h3>Confidence Score: {{ confidence }}%</h3>
-    </div>
-    {% endif %}
+
+<div class="result-card normal">
+    <h1>🟢 Normal Thyroid Function</h1>
+    <h3>Confidence Score: {{ confidence }}%</h3>
+</div>
+
+{% elif prediction_text == "Hypothyroidism" %}
+
+<div class="result-card hypo">
+    <h1>🔵 Hypothyroidism Detected</h1>
+    <h3>Confidence Score: {{ confidence }}%</h3>
+</div>
+
+{% elif prediction_text == "Hyperthyroidism" %}
+
+<div class="result-card hyper">
+    <h1>🟠 Hyperthyroidism Detected</h1>
+    <h3>Confidence Score: {{ confidence }}%</h3>
+</div>
+
+{% else %}
+
+<div class="result-card disease">
+    <h1>🔴 Thyroid Disorder Detected</h1>
+    <h3>Confidence Score: {{ confidence }}%</h3>
+</div>
+
+{% endif %}
 
     <div class="progress-container">
         <div class="progress-bar" style="width: {{ confidence }}%;"></div>
     </div>
+    <div class="card">
+
+    <h2>Patient Information</h2>
+
+    <table>
+
+        <tr>
+            <th>Age</th>
+            <td>{{ age }}</td>
+        </tr>
+
+        <tr>
+            <th>Gender</th>
+            <td>{{ gender }}</td>
+        </tr>
+
+        <tr>
+            <th>Prediction Source</th>
+            <td>{{ source }}</td>
+        </tr>
+
+    </table>
+
+</div>
 
     <div class="card">
         <h2>Patient Thyroid Values</h2>
@@ -43,7 +85,7 @@
             <tr><th>Parameter</th><th>Value</th><th>Normal Range</th></tr>
             <tr><td>TSH</td><td>{{ tsh }}</td><td>0.4 - 4.0</td></tr>
             <tr><td>T3</td><td>{{ t3 }}</td><td>0.8 - 2.0</td></tr>
-            <tr><td>TT4</td><td>{{ tt4 }}</td><td>5 - 12</td></tr>
+            <tr><td>TT4</td><td>{{ tt4 }} nmol/L</td><td>60 - 150 nmol/L</td></tr>
         </table>
     </div>
 
@@ -88,9 +130,9 @@ new Chart(accuracyCtx, {
         datasets: [{
             label: "Accuracy (%)",
             data: [
-                96.45, // Random Forest Accuracy
-                88.20, // SVM Accuracy
-                91.15  // KNN Accuracy
+               89.48 , // Random Forest Accuracy
+                73.41, // SVM Accuracy
+                83.00  // KNN Accuracy
             ],
             backgroundColor: [
                 "#2563eb", // Blue

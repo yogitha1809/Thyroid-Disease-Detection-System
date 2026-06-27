@@ -29,6 +29,7 @@
                     <th>Prediction</th>
                     <th>Confidence</th>
                     <th>Source</th>
+                    <th>Date & Time</th>
                 </tr>
             </thead>
 
@@ -36,7 +37,7 @@
 
                 {% if records|length == 0 %}
                     <tr>
-                        <td colspan="9">No history available</td>
+                        <td colspan="10">No history available</td>
                     </tr>
                 {% endif %}
 
@@ -48,9 +49,25 @@
                     <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
                     <td>{{ row[5] }}</td>
-                    <td>{{ row[6] }}</td>
+                    <td>
+
+                    {% if row[6] == "Normal" %}
+                        <span class="normal"> Normal</span>
+
+                    {% elif row[6] == "Hypothyroidism" %}
+                        <span class="hypo"> Hypothyroidism</span>
+
+                    {% elif row[6] == "Hyperthyroidism" %}
+                        <span class="hyper"> Hyperthyroidism</span>
+
+                    {% else %}
+                        <span class="disease">{{ row[6] }}</span>
+                    {% endif %}
+
+                    </td>
                     <td>{{ row[7] }}</td>
                     <td>{{ row[8] }}</td>
+                    <td>{{ row[9] }}</td>
                 </tr>
                 {% endfor %}
 
